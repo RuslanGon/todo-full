@@ -1,3 +1,4 @@
+import './AuthPage.scss'
 
 const AuthPage = () => {
  
@@ -18,6 +19,7 @@ const AuthPage = () => {
           </div>
           <div className="row">
             <button className="waves-effect waves-light btn blue">Войти</button>
+            <a className="btn-outline btn-reg" href="/">Нет аккаунта?</a>
           </div>
         </form>
       </div>
