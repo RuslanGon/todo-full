@@ -24,3 +24,4 @@ router.post("/registration", async (req, res) => {
 });
 
 export default router; // Экспортируем router
+
