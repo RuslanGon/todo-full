@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import './Registar.scss'
 
 const RegistarPage = () => {
   return (
@@ -15,7 +16,7 @@ const RegistarPage = () => {
             <label htmlFor="password-register">Введите пароль</label>
           </div>
         </div>
-        <div className="row">
+        <div className="row ">
           <button className="waves-effect waves-light btn blue">Регистрация</button>
           <Link className="btn-outline btn-reg" to="/login">Уже есть аккаунт?</Link>
         </div>
