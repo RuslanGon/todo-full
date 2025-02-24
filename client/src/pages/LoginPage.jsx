@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
 import './Login.scss'
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext.js";
+
+
 
 const LoginPage = () => {
+
+  const {login} = useContext(AuthContext)
 
   const [form, setForm] = useState({ email: '', password: ''})
 
@@ -16,7 +21,10 @@ const LoginPage = () => {
 try {
  await axios.post('/api/auth/login', {...form}, {
     headers: {'Content-Type': 'application/json'}
-  });
+  })
+  .then(response => {
+    login(response.data.token, response.data.userId)
+  })
 } catch (error) {
   console.log(error);
 }
