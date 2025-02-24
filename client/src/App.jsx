@@ -10,22 +10,22 @@ import "./App.scss";
 function App() {
   const { login, logout, token, isReady, userId } = useAuth();
 
-  const isLogin = true;
+  const isLogin = !! token
 
   return (
-    <AuthContext.Provider value={{login, logout, token, isReady, userId}}>
+    <AuthContext.Provider value={{ login, logout, token, isReady, userId, isLogin }}>
       <div>
         <Navbar />
         <div className="container">
           <Routes>
-            {/* Условный рендеринг маршрутов в зависимости от состояния isLogin */}
             {isLogin ? (
               <>
                 <Route path="/" element={<MainPage />} />
-                {/* Добавьте другие маршруты для авторизованного пользователя */}
+                {/* Добавьте маршруты для авторизованного пользователя */}
               </>
             ) : (
               <>
+                <Route path="/" element={<LoginPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/registration" element={<RegistarPage />} />
               </>
