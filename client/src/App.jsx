@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar/Navbar.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegistarPage from "./pages/RegistarPage.jsx";
 import "./App.scss";
+import MainPage from "./pages/MainPage.jsx";
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
       <Navbar />
       <div className="container">
         <Routes>
-        <Route path="/" element={<h1>Главная страница</h1>} />
+        <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registration" element={<RegistarPage />} />
         </Routes>
