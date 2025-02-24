@@ -6,6 +6,7 @@ const router = Router();
 // Регистрация
 router.post("/registration", async (req, res) => {
   try {
+
     const { email, password } = req.body;
 
     const isUsed = await User.findOne({ email });
@@ -23,5 +24,5 @@ router.post("/registration", async (req, res) => {
   }
 });
 
-export default router; // Экспортируем router
+export default router; 
 
