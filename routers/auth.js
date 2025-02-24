@@ -1,5 +1,6 @@
 import { Router } from "express";
 import User from "../models/User.js";
+import bcrypt from 'bcryptjs'
 
 const router = Router(); 
 
@@ -14,7 +15,9 @@ router.post("/registration", async (req, res) => {
       return res.status(400).json({ message: "Данный email уже занят" });
     }
 
-    const user = new User({ email, password });
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const user = new User({ email, password: hashedPassword });
     await user.save();
 
     return res.status(201).json({ message: "Пользователь создан" });
