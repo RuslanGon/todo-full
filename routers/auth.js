@@ -8,7 +8,6 @@ const router = Router();
 // Регистрация
 router.post("/registration", async (req, res) => {
   try {
-
     const { email, password } = req.body;
 
     const isUsed = await User.findOne({ email });
@@ -16,7 +15,8 @@ router.post("/registration", async (req, res) => {
       return res.status(400).json({ message: "Данный email уже занят" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12)
+    const hashedPassword = await bcrypt.hash(password, 12);
+    console.log("Хешированный пароль перед сохранением:", hashedPassword);
 
     const user = new User({ email, password: hashedPassword });
     await user.save();
@@ -34,17 +34,23 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(400).json({ message: "Такого email нет в базе" });
     }
 
-    const isMutch = await bcrypt.compare(password, user.password);
-    if (!isMutch) {
+    console.log("Введенный пароль:", password);
+    console.log("Хешированный пароль из базы:", user.password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (!isMatch) {
       return res.status(400).json({ message: "Пароли не совпадают" });
     }
 
     const jwtSecret = "cjdcnhbchf123dcwc";
     const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: "1h" });
+
     res.json({ token, userId: user.id });
 
   } catch (error) {
