@@ -1,8 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors"; 
+import authRoutes from "./routers/auth.js";
 
 const app = express()
 const PORT = process.env.PORT || 5000
+
+
+app.use(cors({ origin: "*", credentials: true }));
+
+
+app.use(express.json()); 
+app.use("/api/auth", authRoutes); 
 
 async function start() {
   try {
