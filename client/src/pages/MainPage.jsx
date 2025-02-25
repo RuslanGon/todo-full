@@ -15,7 +15,7 @@ const MainPage = () => {
         params: { userId },
       });
       setTodos(response.data);
-      saveTodosToLocalStorage(response.data); 
+      saveTodosToLocalStorage(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +26,7 @@ const MainPage = () => {
     if (storedTodos) {
       setTodos(storedTodos);
     } else {
-      getTodo(); 
+      getTodo();
     }
   }, [getTodo]);
 
@@ -43,42 +43,48 @@ const MainPage = () => {
       );
       const newTodos = [...todos, response.data];
       setTodos(newTodos);
-      saveTodosToLocalStorage(newTodos); 
+      saveTodosToLocalStorage(newTodos);
       setText("");
-      getTodo()
+      getTodo();
     } catch (error) {
       console.log(error);
     }
   }, [text, userId, todos, getTodo]);
 
-  const removeTodo = useCallback(async (id) => {
+  const removeTodo = useCallback(
+    async (id) => {
+      try {
+        await axios.delete(`http://localhost:5000/api/todo/delete/${id}`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const updatedTodos = todos.filter((todo) => todo._id !== id);
+        setTodos(updatedTodos);
+        saveTodosToLocalStorage(updatedTodos);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [todos]
+  );
+
+  const completedTodo = useCallback(async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/todo/delete/${id}`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      const updatedTodos = todos.filter((todo) => todo._id !== id);
-      setTodos(updatedTodos);  
-      saveTodosToLocalStorage(updatedTodos);  
+      const response = await axios.put(
+        `http://localhost:5000/api/todo/complete/${id}`,
+        {},
+        { headers: { "Content-Type": "application/json" } }
+      );
+  
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo._id === id ? response.data : todo // ✅ Обновляем по ответу сервера
+        )
+      );
+      saveTodosToLocalStorage(todos);
     } catch (error) {
       console.log(error);
     }
   }, [todos]);
-
-
-  const completedTodo = useCallback(async (id) => {
-    try {
-      await axios.put(`http://localhost:5000/api/todo/complete/${id}`,{id}, {
-        headers: { "Content-Type": "application/json" },
-      })
-     .then(response => {
-      setTodos([...todos], response.data)
-      getTodo()
-     })
-    } catch (error) {
-      console.log(error);
-    }
-  }, [todos, getTodo]);
-
 
   return (
     <div className="container">
@@ -110,15 +116,28 @@ const MainPage = () => {
         <h3>Активные задачи</h3>
         <div className="todos">
           {todos.map((todo, index) => {
+            let cls = ["row flex todos-item"];
+            if (todo.completed) {
+              cls.push("completed");
+            }
             return (
-              <div className="row flex todos-item " key={todo._id}>
+              <div className={cls.join(" ")} key={todo._id}>
                 <div className="col todos-num">{index + 1}</div>
                 <div className="col todos-text">{todo.text}</div>
                 <div className="col todos-buttons">
-                  <i onClick={() => completedTodo(todo._id)} className="material-icons blue-text">check
+                  <i
+                    onClick={() => completedTodo(todo._id)}
+                    className="material-icons blue-text"
+                  >
+                    check
                   </i>
                   <i className="material-icons orange-text">warning</i>
-                  <i onClick={() => removeTodo(todo._id)} className="material-icons red-text">delete</i>
+                  <i
+                    onClick={() => removeTodo(todo._id)}
+                    className="material-icons red-text"
+                  >
+                    delete
+                  </i>
                 </div>
               </div>
             );
