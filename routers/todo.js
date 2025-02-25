@@ -49,4 +49,20 @@ router.put("/complete/:id", async (req, res) => {
   }
 });
 
+router.put("/important/:id", async (req, res) => {
+  try {
+    const todo = await Todo.findOne({ _id: req.params.id });
+    if (!todo) {
+      return res.status(404).json({ message: "Задача не найдена" });
+    }
+
+    todo.important = !todo.important; 
+    await todo.save();
+    res.json(todo);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+});
+
 export default router;

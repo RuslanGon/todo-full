@@ -3,6 +3,7 @@ import "./Main.scss";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext.js";
 
+
 const MainPage = () => {
   const [text, setText] = useState("");
   const [todos, setTodos] = useState([]);
@@ -74,12 +75,32 @@ const MainPage = () => {
         {},
         { headers: { "Content-Type": "application/json" } }
       );
+
+      setTodos((prevTodos) => {
+        const updatedTodos = prevTodos.map((todo) =>
+          todo._id === id ? response.data : todo
+        );
+        saveTodosToLocalStorage(updatedTodos);
+        return updatedTodos;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const importantTodo = useCallback(async (id) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/todo/important/${id}`,
+        {},
+        { headers: { "Content-Type": "application/json" } }
+      );
   
       setTodos((prevTodos) => {
         const updatedTodos = prevTodos.map((todo) =>
           todo._id === id ? response.data : todo
         );
-        saveTodosToLocalStorage(updatedTodos); 
+        saveTodosToLocalStorage(updatedTodos);
         return updatedTodos;
       });
     } catch (error) {
@@ -121,6 +142,9 @@ const MainPage = () => {
             if (todo.completed) {
               cls.push("completed");
             }
+            if (todo.important) {
+              cls.push("important");
+            }
             return (
               <div className={cls.join(" ")} key={todo._id}>
                 <div className="col todos-num">{index + 1}</div>
@@ -132,7 +156,12 @@ const MainPage = () => {
                   >
                     check
                   </i>
-                  <i className="material-icons orange-text">warning</i>
+                  <i
+                    onClick={() => importantTodo(todo._id)}
+                    className="material-icons orange-text"
+                  >
+                    warning
+                  </i>
                   <i
                     onClick={() => removeTodo(todo._id)}
                     className="material-icons red-text"
