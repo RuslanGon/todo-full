@@ -20,6 +20,10 @@
                 background: #2196f3;
             }
         }
+        &.important {
+            font-weight: 500;
+            color: #ff9800;
+        }
     }
     &-buttons {
         margin-left: auto;
@@ -29,7 +33,7 @@
             z-index: 1;
             &:hover {
                 transform: scale(1.3);
-                transition: transform .3s ease ;
+                transition: transform .3s ease;
             }
         }
     }

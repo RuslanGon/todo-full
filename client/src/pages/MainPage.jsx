@@ -96,7 +96,7 @@ const MainPage = () => {
         <div className="todos">
           {todos.map((todo, index) => {
             return (
-              <div className="row flex todos-item" key={todo._id}>
+              <div className="row flex todos-item " key={todo._id}>
                 <div className="col todos-num">{index + 1}</div>
                 <div className="col todos-text">{todo.text}</div>
                 <div className="col todos-buttons">
