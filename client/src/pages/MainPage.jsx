@@ -5,6 +5,7 @@ import { AuthContext } from "../context/AuthContext.js";
 
 const MainPage = () => {
   const [text, setText] = useState("");
+  const [todos, setTodos] = useState([])
   const {userId} = useContext(AuthContext)
 
   const createTodo = useCallback(async () => {
@@ -15,11 +16,14 @@ const MainPage = () => {
         {
           headers: { "Content-Type": "application/json" },
         })
-      .then(response => console.log(response) )
+      .then(response => {
+        setTodos([...todos], response.data)
+        setText('')
+      } )
     } catch (error) {
       console.log(error);
     }
-  }, [text, userId]);
+  }, [text, userId, todos]);
 
   return (
     <div className="container">
@@ -30,6 +34,7 @@ const MainPage = () => {
             <div className="input-field col s12">
               <input
                 onChange={(e) => setText(e.target.value)}
+                value={text}
                 type="text"
                 id="text"
                 name="input"
