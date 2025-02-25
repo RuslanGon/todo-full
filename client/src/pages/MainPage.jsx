@@ -1,42 +1,44 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useState, useEffect } from "react";
 import "./Main.scss";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext.js";
 
 const MainPage = () => {
   const [text, setText] = useState("");
-  const [todos, setTodos] = useState([])
-  const {userId} = useContext(AuthContext)
+  const [todos, setTodos] = useState([]);
+  const { userId } = useContext(AuthContext);
 
-  const createTodo = useCallback(async () => {
-    try {
-      await axios.post(
-        "http://localhost:5000/api/todo/add",
-        { text, userId },
-        {
-          headers: { "Content-Type": "application/json" },
-        })
-      .then(response => {
-        setTodos([...todos], response.data)
-        setText('')
-      } )
-    } catch (error) {
-      console.log(error);
-    }
-  }, [text, userId, todos]);
-
+  // Определяем getTodo до useEffect
   const getTodo = useCallback(async () => {
     try {
-      await axios.get("/api/todo", {
+      const response = await axios.get("http://localhost:5000/api/todo", {
         headers: { "Content-Type": "application/json" },
         params: { userId },
-      })
-      .then(response => setTodos(response.data))
+      });
+      setTodos(response.data);
     } catch (error) {
       console.log(error);
     }
   }, [userId]);
 
+  // Вызов getTodo при первом рендере компонента
+  useEffect(() => {
+    getTodo();
+  }, [getTodo]);
+
+  const createTodo = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/todo/add",
+        { text, userId },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      setTodos((prevTodos) => [...prevTodos, response.data]);
+      setText("");
+    } catch (error) {
+      console.log(error);
+    }
+  }, [text, userId]);
 
   return (
     <div className="container">
@@ -57,7 +59,10 @@ const MainPage = () => {
             </div>
           </div>
           <div className="row">
-            <button onClick={createTodo} className="waves-effect waves-light btn blue">
+            <button
+              onClick={createTodo}
+              className="waves-effect waves-light btn blue"
+            >
               Добавить
             </button>
           </div>
@@ -66,16 +71,16 @@ const MainPage = () => {
         <div className="todos">
           {todos.map((todo, index) => {
             return (
-              <div className="row flex todos-item" key={index}>
-            <div className="col todos-num">{index}</div>
-            <div className="col todos-text">{todo.text}</div>
-            <div className="col todos-buttons">
-              <i className="material-icons blue-text">check</i>
-              <i className="material-icons orange-text">warning</i>
-              <i className="material-icons red-text">delete</i>
-            </div>
-          </div>
-            )
+              <div className="row flex todos-item" key={todo._id}>
+                <div className="col todos-num">{index + 1}</div>
+                <div className="col todos-text">{todo.text}</div>
+                <div className="col todos-buttons">
+                  <i className="material-icons blue-text">check</i>
+                  <i className="material-icons orange-text">warning</i>
+                  <i className="material-icons red-text">delete</i>
+                </div>
+              </div>
+            );
           })}
         </div>
       </div>
