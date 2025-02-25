@@ -4,7 +4,7 @@ const MainPage = () => {
   return (
     <div className="container">
       <div className="main-page">
-        <h4>Добавить задачу</h4>
+        <h4>Добавить задачу:</h4>
         <form className="form form-login">
           <div className="row">
             <div className="input-field col s12">
@@ -21,7 +21,11 @@ const MainPage = () => {
           <div className="row flex todos-item">
             <div className="col todos-num">1</div>
             <div className="col todos-text">Text</div>
-            <div className="col todos-buttons"></div>
+            <div className="col todos-buttons">
+            <i className="material-icons blue-text">check</i>
+            <i className="material-icons orange-text">warning</i>
+            <i className="material-icons red-text">delete</i>
+            </div>
           </div>
         </div>
       </div>
