@@ -8,7 +8,6 @@ const MainPage = () => {
   const [todos, setTodos] = useState([]);
   const { userId } = useContext(AuthContext);
 
-  // Определяем getTodo до использования
   const getTodo = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/todo", {
@@ -16,23 +15,21 @@ const MainPage = () => {
         params: { userId },
       });
       setTodos(response.data);
-      saveTodosToLocalStorage(response.data); // Сохраняем в localStorage
+      saveTodosToLocalStorage(response.data); 
     } catch (error) {
       console.log(error);
     }
   }, [userId]);
 
-  // Загрузка задач из localStorage при монтировании компонента
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("todos"));
     if (storedTodos) {
       setTodos(storedTodos);
     } else {
-      getTodo(); // Загружать с сервера, если в localStorage нет данных
+      getTodo(); 
     }
   }, [getTodo]);
 
-  // Функция для сохранения задач в localStorage
   const saveTodosToLocalStorage = (todos) => {
     localStorage.setItem("todos", JSON.stringify(todos));
   };
@@ -46,7 +43,7 @@ const MainPage = () => {
       );
       const newTodos = [...todos, response.data];
       setTodos(newTodos);
-      saveTodosToLocalStorage(newTodos); // Сохраняем в localStorage
+      saveTodosToLocalStorage(newTodos); 
       setText("");
       getTodo()
     } catch (error) {
@@ -56,15 +53,12 @@ const MainPage = () => {
 
   const removeTodo = useCallback(async (id) => {
     try {
-      // Удаление задачи с сервера
       await axios.delete(`http://localhost:5000/api/todo/delete/${id}`, {
         headers: { "Content-Type": "application/json" },
       });
-      
-      // Обновление списка задач локально, чтобы убрать удаленную задачу
       const updatedTodos = todos.filter((todo) => todo._id !== id);
-      setTodos(updatedTodos);  // Обновляем состояние
-      saveTodosToLocalStorage(updatedTodos);  // Сохраняем обновленный список в localStorage
+      setTodos(updatedTodos);  
+      saveTodosToLocalStorage(updatedTodos);  
     } catch (error) {
       console.log(error);
     }
