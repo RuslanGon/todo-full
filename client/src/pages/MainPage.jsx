@@ -62,8 +62,7 @@ const MainPage = () => {
             <button
               onClick={createTodo}
               className="waves-effect waves-light btn blue"
-            >
-              Добавить
+            > Добавить
             </button>
           </div>
         </form>
