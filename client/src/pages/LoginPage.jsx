@@ -22,7 +22,7 @@ const LoginPage = () => {
 
   const loginHandler = async () => {
     try {
-      const response = await axios.post('/api/auth/login', form, {
+      const response = await axios.post('http://localhost:5000/api/auth/login', form, {
         headers: { 'Content-Type': 'application/json' }
       });
 
