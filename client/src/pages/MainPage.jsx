@@ -48,10 +48,11 @@ const MainPage = () => {
       setTodos(newTodos);
       saveTodosToLocalStorage(newTodos); // Сохраняем в localStorage
       setText("");
+      getTodo()
     } catch (error) {
       console.log(error);
     }
-  }, [text, userId, todos]);
+  }, [text, userId, todos, getTodo]);
 
   return (
     <div className="container">
