@@ -75,16 +75,17 @@ const MainPage = () => {
         { headers: { "Content-Type": "application/json" } }
       );
   
-      setTodos((prevTodos) =>
-        prevTodos.map((todo) =>
-          todo._id === id ? response.data : todo // ✅ Обновляем по ответу сервера
-        )
-      );
-      saveTodosToLocalStorage(todos);
+      setTodos((prevTodos) => {
+        const updatedTodos = prevTodos.map((todo) =>
+          todo._id === id ? response.data : todo
+        );
+        saveTodosToLocalStorage(updatedTodos); 
+        return updatedTodos;
+      });
     } catch (error) {
       console.log(error);
     }
-  }, [todos]);
+  }, []);
 
   return (
     <div className="container">
