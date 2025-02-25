@@ -64,15 +64,19 @@ const MainPage = () => {
         </form>
         <h3>Активные задачи</h3>
         <div className="todos">
-          <div className="row flex todos-item">
-            <div className="col todos-num">1</div>
-            <div className="col todos-text">Text</div>
+          {todos.map((todo, index) => {
+            return (
+              <div className="row flex todos-item" key={index}>
+            <div className="col todos-num">{index}</div>
+            <div className="col todos-text">{todo.text}</div>
             <div className="col todos-buttons">
               <i className="material-icons blue-text">check</i>
               <i className="material-icons orange-text">warning</i>
               <i className="material-icons red-text">delete</i>
             </div>
           </div>
+            )
+          })}
         </div>
       </div>
     </div>
