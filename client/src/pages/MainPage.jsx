@@ -1,20 +1,48 @@
+import { useCallback, useContext, useState } from "react";
 import "./Main.scss";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext.js";
 
 const MainPage = () => {
+  const [text, setText] = useState("");
+  const {userId} = useContext(AuthContext)
+
+  const createTodo = useCallback(async () => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/todo/add",
+        { text, userId },
+        {
+          headers: { "Content-Type": "application/json" },
+        })
+      .then(response => console.log(response) )
+    } catch (error) {
+      console.log(error);
+    }
+  }, [text, userId]);
+
   return (
     <div className="container">
       <div className="main-page">
         <h4>Добавить задачу:</h4>
-        <form className="form form-login">
+        <form className="form form-login" onSubmit={(e) => e.preventDefault()}>
           <div className="row">
             <div className="input-field col s12">
-              <input type="text" id="text" name="input" className="validate" />
+              <input
+                onChange={(e) => setText(e.target.value)}
+                type="text"
+                id="text"
+                name="input"
+                className="validate"
+              />
               <label htmlFor="input">Задача:</label>
             </div>
           </div>
-        <div className="row">
-          <button className="waves-effect waves-light btn blue">Добавить</button>
-        </div>
+          <div className="row">
+            <button onClick={createTodo} className="waves-effect waves-light btn blue">
+              Добавить
+            </button>
+          </div>
         </form>
         <h3>Активные задачи</h3>
         <div className="todos">
@@ -22,9 +50,9 @@ const MainPage = () => {
             <div className="col todos-num">1</div>
             <div className="col todos-text">Text</div>
             <div className="col todos-buttons">
-            <i className="material-icons blue-text">check</i>
-            <i className="material-icons orange-text">warning</i>
-            <i className="material-icons red-text">delete</i>
+              <i className="material-icons blue-text">check</i>
+              <i className="material-icons orange-text">warning</i>
+              <i className="material-icons red-text">delete</i>
             </div>
           </div>
         </div>
