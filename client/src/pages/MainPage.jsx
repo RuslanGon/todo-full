@@ -54,6 +54,23 @@ const MainPage = () => {
     }
   }, [text, userId, todos, getTodo]);
 
+  const removeTodo = useCallback(async (id) => {
+    try {
+      // Удаление задачи с сервера
+      await axios.delete(`http://localhost:5000/api/todo/delete/${id}`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      
+      // Обновление списка задач локально, чтобы убрать удаленную задачу
+      const updatedTodos = todos.filter((todo) => todo._id !== id);
+      setTodos(updatedTodos);  // Обновляем состояние
+      saveTodosToLocalStorage(updatedTodos);  // Сохраняем обновленный список в localStorage
+    } catch (error) {
+      console.log(error);
+    }
+  }, [todos]);
+
+
   return (
     <div className="container">
       <div className="main-page">
@@ -91,7 +108,7 @@ const MainPage = () => {
                 <div className="col todos-buttons">
                   <i className="material-icons blue-text">check</i>
                   <i className="material-icons orange-text">warning</i>
-                  <i className="material-icons red-text">delete</i>
+                  <i onClick={() => removeTodo(todo._id)} className="material-icons red-text">delete</i>
                 </div>
               </div>
             );
