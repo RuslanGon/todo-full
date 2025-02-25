@@ -23,16 +23,6 @@
         &.important {
             font-weight: 500;
             color: #ff9800;
-            
-            &::after {
-                position: absolute;
-                content: '';
-                left: 25px;
-                width: 800px;
-                top: 50%;
-                height: 2px;
-                background: #ff9800; // Оранжевая линия
-            }
         }
     }
     &-buttons {
