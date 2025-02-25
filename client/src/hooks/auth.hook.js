@@ -6,7 +6,7 @@ export const useAuth = () => {
   const [isReady, setIsReady] = useState(false);
 
   const login = useCallback((jwtToken, id) => {
-    if (!jwtToken || !id) return; 
+    if (!jwtToken || !id) return;
     setToken(jwtToken);
     setUserId(id);
     localStorage.setItem(
@@ -16,12 +16,16 @@ export const useAuth = () => {
         token: jwtToken,
       })
     );
+
+    // Очистить задачи для нового пользователя
+    localStorage.removeItem("tasks"); // Сбрасывает задачи, если они есть в локальном хранилище
   }, []);
 
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
     localStorage.removeItem("userData");
+    localStorage.removeItem("tasks"); // Удалить задачи при выходе
   }, []);
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export const useAuth = () => {
       login(data.token, data.userId);
     }
     setIsReady(true);
-  }, [login]); 
+  }, [login]);
 
   return { login, logout, token, isReady, userId };
 };
