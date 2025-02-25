@@ -65,6 +65,21 @@ const MainPage = () => {
   }, [todos]);
 
 
+  const completedTodo = useCallback(async (id) => {
+    try {
+      await axios.put(`http://localhost:5000/api/todo/complete/${id}`,{id}, {
+        headers: { "Content-Type": "application/json" },
+      })
+     .then(response => {
+      setTodos([...todos], response.data)
+      getTodo()
+     })
+    } catch (error) {
+      console.log(error);
+    }
+  }, [todos, getTodo]);
+
+
   return (
     <div className="container">
       <div className="main-page">
@@ -100,7 +115,8 @@ const MainPage = () => {
                 <div className="col todos-num">{index + 1}</div>
                 <div className="col todos-text">{todo.text}</div>
                 <div className="col todos-buttons">
-                  <i className="material-icons blue-text">check</i>
+                  <i onClick={() => completedTodo(todo._id)} className="material-icons blue-text">check
+                  </i>
                   <i className="material-icons orange-text">warning</i>
                   <i onClick={() => removeTodo(todo._id)} className="material-icons red-text">delete</i>
                 </div>

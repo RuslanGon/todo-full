@@ -38,7 +38,7 @@ router.delete('/delete/:id', async (req, res) => {
     }
 })
 
-router.put("/completed/:id", async (req, res) => {
+router.put("/complete/:id", async (req, res) => {
   try {
     const todo = await Todo.findOne({ _id: req.params.id });
     todo.completed = !todo.completed;
