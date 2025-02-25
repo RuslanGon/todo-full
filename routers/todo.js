@@ -38,4 +38,15 @@ router.delete('/delete/:id', async (req, res) => {
     }
 })
 
+router.put("/completed/:id", async (req, res) => {
+  try {
+    const todo = await Todo.findOne({ _id: req.params.id });
+    todo.completed = !todo.completed;
+    await todo.save();
+    res.json(todo)
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export default router;
