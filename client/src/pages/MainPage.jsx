@@ -25,6 +25,19 @@ const MainPage = () => {
     }
   }, [text, userId, todos]);
 
+  const getTodo = useCallback(async () => {
+    try {
+      await axios.get("/api/todo", {
+        headers: { "Content-Type": "application/json" },
+        params: { userId },
+      })
+      .then(response => setTodos(response.data))
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userId]);
+
+
   return (
     <div className="container">
       <div className="main-page">

@@ -19,4 +19,14 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+    try {
+        const {userId} = red.query
+        const todo = await Todo.find({owner: userId})
+        res.json(todo)
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 export default router;
