@@ -8,7 +8,7 @@ const MainPage = () => {
   const [todos, setTodos] = useState([]);
   const { userId } = useContext(AuthContext);
 
-  // Определяем getTodo до useEffect
+  // Определяем getTodo до использования
   const getTodo = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/todo", {
@@ -16,15 +16,26 @@ const MainPage = () => {
         params: { userId },
       });
       setTodos(response.data);
+      saveTodosToLocalStorage(response.data); // Сохраняем в localStorage
     } catch (error) {
       console.log(error);
     }
   }, [userId]);
 
-  // Вызов getTodo при первом рендере компонента
+  // Загрузка задач из localStorage при монтировании компонента
   useEffect(() => {
-    getTodo();
+    const storedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (storedTodos) {
+      setTodos(storedTodos);
+    } else {
+      getTodo(); // Загружать с сервера, если в localStorage нет данных
+    }
   }, [getTodo]);
+
+  // Функция для сохранения задач в localStorage
+  const saveTodosToLocalStorage = (todos) => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  };
 
   const createTodo = useCallback(async () => {
     try {
@@ -33,12 +44,14 @@ const MainPage = () => {
         { text, userId },
         { headers: { "Content-Type": "application/json" } }
       );
-      setTodos((prevTodos) => [...prevTodos, response.data]);
+      const newTodos = [...todos, response.data];
+      setTodos(newTodos);
+      saveTodosToLocalStorage(newTodos); // Сохраняем в localStorage
       setText("");
     } catch (error) {
       console.log(error);
     }
-  }, [text, userId]);
+  }, [text, userId, todos]);
 
   return (
     <div className="container">
@@ -62,7 +75,8 @@ const MainPage = () => {
             <button
               onClick={createTodo}
               className="waves-effect waves-light btn blue"
-            > Добавить
+            >
+              Добавить
             </button>
           </div>
         </form>
