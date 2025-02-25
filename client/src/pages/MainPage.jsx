@@ -1,9 +1,13 @@
-import './Main.scss'
+import "./Main.scss";
 
 const MainPage = () => {
   return (
-    <div><h1>MainPage</h1></div>
-  )
-}
+    <div className="container">
+      <div className="main-page">
+        <h4>Добавить задачу</h4>
+      </div>
+    </div>
+  );
+};
 
-export default MainPage
+export default MainPage;

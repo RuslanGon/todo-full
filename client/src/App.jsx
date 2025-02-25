@@ -21,7 +21,6 @@ function App() {
             {isLogin ? (
               <>
                 <Route path="/" element={<MainPage />} />
-                {/* Добавьте маршруты для авторизованного пользователя */}
               </>
             ) : (
               <>
